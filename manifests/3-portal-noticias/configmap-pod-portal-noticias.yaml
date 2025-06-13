@@ -5,4 +5,4 @@ metadata:
 data:
   # O QUE ALTERAR: Substitua este valor pelo IP externo real do seu 
   # serviço 'loadbalancer-sistema-noticias' depois que ele for criado.
-  urlnoticias: "http://34.74.207.242/"
+  urlnoticias: "http://34.74.207.242"
