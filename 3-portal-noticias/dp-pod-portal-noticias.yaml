@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pod-portal-noticias-deployment
+spec:
+  template:
+    metadata:
+      name: pod-portal-noticias
+      labels:
+        app: pod-portal-noticias
+    spec:                                              
+      containers:                                      
+        - name: portal-noticias-container              
+          image: aluracursos/portal-noticias:1
+          ports:
+            - containerPort: 80
+          env:
+            - name: IP_SISTEMA
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap-pod-portal-noticias
+                  key: urlnoticias
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            periodSeconds: 10
+            failureThreshold: 3
+            initialDelaySeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            periodSeconds: 10
+            failureThreshold: 5
+            initialDelaySeconds: 3
+          resources:
+            requests:
+              cpu: 10m
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pod-portal-noticias

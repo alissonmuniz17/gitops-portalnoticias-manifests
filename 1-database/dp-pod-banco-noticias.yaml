@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pod-banco-noticias-deployment
+spec:
+  template:
+    metadata:
+      name: pod-banco-noticias
+      labels:
+        app: pod-banco-noticias
+    spec:                                              
+      containers:                                      
+        - name: banco-noticias-container              
+          image: aluracursos/mysql-db:1
+          ports:
+            - containerPort: 3306
+          envFrom:
+            - configMapRef: # <-- Carrega o nome do DB
+                name: configmap-pod-banco-noticias
+            - secretRef: # <-- Carrega as senhas do Secret
+                name: secret-banco-noticias
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pod-banco-noticias

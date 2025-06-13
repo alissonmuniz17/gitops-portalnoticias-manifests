@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: headless-statefulset # O nome exato que o StatefulSet precisa
+spec:
+  clusterIP: None # A linha que o torna "headless"
+  selector:
+    app: pod-sistema-noticias
+  ports:
+    - port: 80
+      targetPort: 80

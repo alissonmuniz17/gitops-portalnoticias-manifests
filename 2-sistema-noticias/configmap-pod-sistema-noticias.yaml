@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-pod-sistema-noticias
+data:
+  HOST_DB: svc-pod-banco-noticias:3306
+  DATABASE_DB: empresa

@@ -1,0 +1,6 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-pod-banco-noticias
+data:
+  MYSQL_DATABASE: empresa

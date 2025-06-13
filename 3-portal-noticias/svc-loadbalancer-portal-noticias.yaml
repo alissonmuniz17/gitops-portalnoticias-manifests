@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: loadbalancer-portal-noticias
+spec:
+  # O tipo LoadBalancer cria um IP externo público no GCP
+  type: LoadBalancer
+  ports:
+    - port: 80 # A porta que o LoadBalancer expõe para a internet
+      targetPort: 80 # A porta onde o container do portal está escutando
+  selector:
+    # Este seletor encontra os pods com a label 'app: pod-portal-noticias'
+    app: pod-portal-noticias

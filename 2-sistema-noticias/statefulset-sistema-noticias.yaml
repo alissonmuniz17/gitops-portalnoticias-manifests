@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: statefulset-sistema-noticias
+spec:
+  serviceName: headless-statefulset # Aponta para o seu headless service
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pod-sistema-noticias
+  template:
+    metadata:
+      labels:
+        app: pod-sistema-noticias
+    spec:
+      initContainers:
+      - name: fix-volume-permissions
+        image: busybox:1.28
+        command: ["sh", "-c", "chown -R 33:33 /tmp /var/www/html/uploads"]
+        volumeMounts:
+        - name: sessao
+          mountPath: /tmp
+        - name: imagens
+          mountPath: /var/www/html/uploads                                              
+      containers:                                      
+        - name: sistema-noticias-container              
+          image: aluracursos/sistema-noticias:1
+          ports:
+            - containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: configmap-pod-sistema-noticias
+            - secretRef:
+                name: secret-sistema-noticias
+          volumeMounts:
+            - name: imagens
+              mountPath: /var/www/html/uploads
+            - name: sessao
+              mountPath: /tmp
+  
+  # Templates de PVC: O StatefulSet cria os PVCs automaticamente
+  volumeClaimTemplates:
+  - metadata:
+      name: imagens
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "standard-rwo"
+      resources:
+        requests:
+          storage: 1Gi
+  - metadata:
+      name: sessao
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "standard-rwo"
+      resources:
+        requests:
+          storage: 1Gi
